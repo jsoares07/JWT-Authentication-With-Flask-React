@@ -1,26 +1,101 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { Context } from "../store/appContext";
-import rigoImageUrl from "../../img/rigo-baby.jpg";
 import "../../styles/home.css";
+import { Link, useNavigate } from "react-router-dom";
 
 export const Home = () => {
-	const { store, actions } = useContext(Context);
+  const { store, actions } = useContext(Context);
+  const [logIn, setLogIn] = useState({});
+  const [signUp, setSingUp] = useState({});
 
-	return (
-		<div className="text-center mt-5">
-			<h1>Hello Rigo!!</h1>
-			<p>
-				<img src={rigoImageUrl} />
-			</p>
-			<div className="alert alert-info">
-				{store.message || "Loading message from the backend (make sure your python backend is running)..."}
-			</div>
-			<p>
-				This boilerplate comes with lots of documentation:{" "}
-				<a href="https://github.com/4GeeksAcademy/react-flask-hello/tree/95e0540bd1422249c3004f149825285118594325/docs">
-					Read documentation
-				</a>
-			</p>
-		</div>
-	);
+  const navigate = useNavigate();
+
+  const navigateProfile = () => {
+    navigate("/profile");
+  };
+
+  return (
+    <>
+      {localStorage.getItem("token") ? (
+        useEffect(() => {
+          navigateProfile();
+        })
+      ) : (
+        <div>
+          <div className="text-center mt-5 mx-auto" style={{ width: "10rem" }}>
+            <h4>Sign up</h4>
+            <label htmlFor="email">Email</label>
+            <input
+              onChange={(e) => {
+                setSingUp({ ...signUp, email: e.target.value });
+              }}
+              name="email"
+              type="email"
+              id="email"
+              className="inputgroup"
+            />
+            <label htmlFor="password">Password</label>
+            <input
+              onChange={(e) => {
+                setSingUp({ ...signUp, password: e.target.value });
+              }}
+              name="password"
+              type="password"
+              id="password"
+              className="inputgroup"
+            />
+            <label htmlFor="repeatpassword">Repeat Password</label>
+            <input
+              onChange={(e) => {
+                setSingUp({ ...signUp, repeatpassword: e.target.value });
+              }}
+              name="repeatpassword"
+              type="password"
+              id="repeatpassword"
+              className="inputgroup"
+            />
+            <input
+              onClick={() => {
+                actions.signUp(signUp);
+              }}
+              type="button"
+              className="Submit mt-2"
+              value={"Submit"}
+            />
+          </div>
+          <div className="text-center mt-5 mx-auto" style={{ width: "10rem" }}>
+            <h4>Log in</h4>
+            <label htmlFor="email">Email</label>
+            <input
+              onChange={(e) => {
+                setLogIn({ ...logIn, email: e.target.value });
+              }}
+              name="email"
+              type="email"
+              id="email"
+              className="inputgroup"
+            />
+            <label htmlFor="password">Password</label>
+            <input
+              onChange={(e) => {
+                setLogIn({ ...logIn, password: e.target.value });
+              }}
+              name="password"
+              type="password"
+              id="password"
+              className="inputgroup"
+            />
+            <input
+              onClick={() => {
+                actions.logIn(logIn);
+              }}
+              type="button"
+              className="Submit mt-2"
+              value={"Submit"}
+            />
+          </div>
+        </div>
+      )}
+    </>
+  );
 };
